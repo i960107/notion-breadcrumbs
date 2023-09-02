@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class OtherPageDto {
+public class SubPageDto {
 
     private Long pageId;
     private String title;
