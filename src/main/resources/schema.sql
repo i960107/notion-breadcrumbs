@@ -5,4 +5,3 @@ create TABLE `page` (
   `parent_id` bigint DEFAULT NULL,
   primary key(`page_id`)
 );
-create index parent_id on page(parent_id);
