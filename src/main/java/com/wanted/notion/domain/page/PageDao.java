@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PageDao {
     private final JdbcTemplate jdbcTemplate;
+    private static final int MAX_RETRIES = 3;
 
     public PageDto getPage(Long pageId) {
         String query = "SELECT "
@@ -48,15 +49,25 @@ public class PageDao {
         String query = "SELECT page_id, title, parent_id FROM PAGE WHERE page_id = ";
         List<BreadcrumbDto> breadcrumbs = new LinkedList<>();
         do {
-            pageId = jdbcTemplate.queryForObject(query + pageId.toString(), (rs, rows) -> {
-                        breadcrumbs.add(0, BreadcrumbDto.builder()
-                                .id(rs.getLong("page_id"))
-                                .title(rs.getString("title"))
-                                .build());
-                        return rs.getLong("parent_id");
+            for (int i = 0; i <= MAX_RETRIES; i++) {
+                try {
+                    pageId = jdbcTemplate.queryForObject(query + pageId.toString(), (rs, rows) -> {
+                                breadcrumbs.add(0, BreadcrumbDto.builder()
+                                        .id(rs.getLong("page_id"))
+                                        .title(rs.getString("title"))
+                                        .build());
+                                return rs.getLong("parent_id");
+                            }
+                    );
+                    break;
+                } catch (Exception e) {
+                    if (i == MAX_RETRIES) {
+                        throw e;
                     }
-            );
+                }
+            }
         } while (pageId != 0);
         return breadcrumbs;
     }
+
 }
