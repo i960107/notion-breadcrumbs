@@ -12,4 +12,5 @@ import lombok.ToString;
 public class BreadcrumbDto {
     private Long id;
     private String title;
+    private Long parentId;
 }

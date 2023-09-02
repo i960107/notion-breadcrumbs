@@ -2,8 +2,10 @@ package com.wanted.notion.domain.page;
 
 import com.wanted.notion.dto.BreadcrumbDto;
 import com.wanted.notion.dto.PageDto;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -25,7 +27,7 @@ public class PageDao {
             + "FROM PAGE p1 INNER JOIN Page p2 "
             + "ON p1.page_id = p2.parent_id "
             + "WHERE p1.page_id = ";
-
+    private static final Map<Long, BreadcrumbDto> breadcrumbCache = new HashMap<>();
 
     public PageDto getPage(Long pageId) {
 
@@ -71,13 +73,19 @@ public class PageDao {
     }
 
     private Long addCrumb(Long pageId, List<BreadcrumbDto> breadcrumbs) {
-        BreadcrumbDto crumb = jdbcTemplate.queryForObject(GET_CRUMB_QUERY + pageId.toString(),
-                (rs, rows) -> BreadcrumbDto.builder()
-                        .id(rs.getLong("page_id"))
-                        .title(rs.getString("title"))
-                        .parentId(rs.getLong("parent_id"))
-                        .build()
-        );
+        BreadcrumbDto crumb;
+        if (breadcrumbCache.containsKey(pageId)) {
+            crumb = breadcrumbCache.get(pageId);
+        } else {
+            crumb = jdbcTemplate.queryForObject(GET_CRUMB_QUERY + pageId.toString(),
+                    (rs, rows) -> BreadcrumbDto.builder()
+                            .id(rs.getLong("page_id"))
+                            .title(rs.getString("title"))
+                            .parentId(rs.getLong("parent_id"))
+                            .build()
+            );
+        }
+        breadcrumbCache.put(pageId, crumb);
         breadcrumbs.add(0, crumb);
         return crumb.getParentId();
     }
