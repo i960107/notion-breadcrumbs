@@ -2,6 +2,7 @@ package com.wanted.notion.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import com.wanted.notion.dto.BreadcrumbDto;
 import com.wanted.notion.dto.PageDto;
@@ -35,6 +36,12 @@ class PageServiceTest {
 
         assertNotNull(pageDto.getSubpages().get(0).getTitle());
         assertNotNull(pageDto.getSubpages().get(0).getId());
+    }
+
+    @Test
+    void test_get_non_exist_page() {
+        Long pageId = 10L;
+        assertNull(pageService.getPage(pageId));
     }
 
 }
