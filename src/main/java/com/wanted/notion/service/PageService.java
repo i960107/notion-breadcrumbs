@@ -15,10 +15,13 @@ public class PageService {
     public PageDto getPage(Long pageId) {
         PageDto pageDto = pageDao.getPage(pageId);
 
-        List<BreadcrumbDto> breadcrumbs = pageDao
-                .getBreadcrumbs(pageDto.getPageId());
-        pageDto.addBreadcrumbs(breadcrumbs);
+        if (pageDto != null) {
+            List<BreadcrumbDto> breadcrumbs = pageDao
+                    .getBreadcrumbs(pageDto.getPageId());
+            pageDto.addBreadcrumbs(breadcrumbs);
 
+            return pageDto;
+        }
         return pageDto;
     }
 }
