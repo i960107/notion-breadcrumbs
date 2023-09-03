@@ -7,3 +7,7 @@ spring:
   h2:
     console:
       enabled: True
+      path: /h2
+  sql:
+    init:
+      mode: always
