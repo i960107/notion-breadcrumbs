@@ -7,3 +7,8 @@ spring:
   h2:
     console:
       enabled: True
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:sql/data.sql
+      schema-locations: classpath:sql/schema.sql
