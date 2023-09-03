@@ -37,6 +37,17 @@ public class Page {
         return new Page(id, title, content, parent);
     }
 
+    public PageDto toDto(List<Page> subPages, List<Page> broadCrumbs) {
+        List<SubPageDto> subPageDtos = subPages.stream().map(page -> page.toSubDto()).collect(Collectors.toList());
+        List<SubPageDto> broadCrumbDtos = broadCrumbs.stream().map(page -> page.toSubDto()).collect(Collectors.toList());
+
+        return new PageDto(getId(), getTitle(), getContent(), subPageDtos, broadCrumbDtos);
+    }
+
+    public SubPageDto toSubDto() {
+        return new SubPageDto(getId(), getTitle());
+    }
+
     public List<Page> findBroadCrumbs() {
         List<Page> list = Stream.iterate(this, Objects::nonNull, p -> p.getParent()).collect(Collectors.toList());
         Collections.reverse(list);
