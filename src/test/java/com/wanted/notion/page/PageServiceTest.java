@@ -1,4 +1,4 @@
-package com.wanted.notion;
+package com.wanted.notion.page;
 
 import com.wanted.notion.dto.page.PageResponseDto;
 import com.wanted.notion.service.PageService;

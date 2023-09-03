@@ -35,7 +35,6 @@ public class PageDao {
             return Optional.empty();
         }
     }
-
     public List<PageSummaryDto> findByBreadCrumbs(int id) {
         return jdbcTemplate.query(FIND_BREADCRUMBS_SQL, new Object[]{id}, new PageRowMapper());
     }

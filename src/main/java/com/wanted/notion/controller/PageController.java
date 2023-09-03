@@ -20,8 +20,8 @@ public class PageController {
 
     @GetMapping("/{id}")
     public PageResponseDto findByPage(@PathVariable int id) {
-        Optional<PageResponseDto> response = pageService.findByPage(id);
-        return response.get();
+        PageResponseDto response = pageService.findByPage(id);
+        return response;
     }
 }
 

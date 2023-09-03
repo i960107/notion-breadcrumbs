@@ -6,6 +6,7 @@ import com.wanted.notion.domain.page.PageDao;
 import com.wanted.notion.dto.page.PageSummaryDto;
 import com.wanted.notion.dto.page.PageResponseDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,27 +19,22 @@ import java.util.Optional;
 public class PageService {
     private final PageDao pageDao;
 
-
+    @Cacheable(value = "page", key = "#id")
     @Transactional(readOnly = true)
-    public Optional<PageResponseDto> findByPage(int id) {
+    public PageResponseDto findByPage(int id) {
 
-        Optional<Page> pageOptional = pageDao.findById(id);
+        Page page = pageDao.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 페이지가 없습니다. id=" + id));
 
-        if (pageOptional.isPresent()) {
-            Page page = pageOptional.get();
-            List<PageSummaryDto> breadcrumbs = pageDao.findByBreadCrumbs(id);
-            List<PageSummaryDto> subpages = pageDao.findBySubPages(id);
+        List<PageSummaryDto> breadcrumbs = pageDao.findByBreadCrumbs(id);
+        List<PageSummaryDto> subpages = pageDao.findBySubPages(id);
 
-            PageResponseDto response = PageResponseDto.builder()
-                    .pageId(page.getId())
-                    .title(page.getTitle())
-                    .content(page.getContent())
-                    .subPages(subpages)
-                    .breadcrumbs(breadcrumbs)
-                    .build();
+        return PageResponseDto.builder()
+                .pageId(page.getId())
+                .title(page.getTitle())
+                .content(page.getContent())
+                .subPages(subpages)
+                .breadcrumbs(breadcrumbs)
+                .build();
 
-            return Optional.ofNullable(response);
-        }
-      return Optional.empty();
     }
 }
