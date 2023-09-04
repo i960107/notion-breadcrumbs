@@ -80,16 +80,15 @@
 2. 페이지의 부모페이지 id를 찾기 위해서 join을 수행해야한다. 반면에 page 테이블에서 parent_id를 필드로 가지는 경우 별도의 join 없이 빠르게 부모 페이지 id를 찾을 수 있다.
 
 ## 프로젝트 구조
-
-```json
-.
-├── build.gradle
-└── src
-├── main
-│   ├── java
-│   │   └── com
-│   │       └── wanted
-│   │           └── notion
+```txt 
+.  
+├── build.gradle  
+└── src  
+├── main  
+│   ├── java  
+│   │   └── com    
+│   │       └── wanted  
+│   │           └── notion  
 │   │               ├── NotionApplication.java
 │   │               ├── domain
 │   │               │   └── page
@@ -113,7 +112,6 @@
           └── service
             └── PageServiceTest.java
 ```
-
 ## 구현 방법
 
 ### 브레드크럼 조회 방법
